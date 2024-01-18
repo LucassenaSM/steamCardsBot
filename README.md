@@ -30,7 +30,7 @@ USER=usuário_do_Discord_para_enviar_alertas
 Abra um terminal no diretório do script.
 Execute o script:
 ```node app.js```
-Ou crie um atalho do arquivo `SteamCardsBot.bat` para a área de trabalho e mude o caminho dentro do arquivo para onde estão os arquivos.
+ou crie um atalho do arquivo `SteamCardsBot.bat` para a área de trabalho e mude o caminho dentro do arquivo para onde estão os arquivos e caso esteja escrito `nodemon app.js` coloque `node app.js`.
 
 ## Uso
 O script começará a ser executado e monitorando as cartas especificadas.
