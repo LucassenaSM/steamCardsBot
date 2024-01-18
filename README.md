@@ -15,15 +15,15 @@ dotenv (uma biblioteca Node.js para carregar variáveis de ambiente)
 ## Instalação
 Instale as dependências:
 
-```npm install puppeteer express cron dotenv```
+```npm install puppeteer express cron dotenv chromium```
 
 ### Crie um arquivo .env:
 No mesmo diretório do script, crie um arquivo chamado .env e adicione as seguintes variáveis:
-
+```
 EMAIL=seu_e-mail_do_Discord
 SENHA=sua_senha_do_Discord
 USER=usuário_do_Discord_para_enviar_alertas
-
+````
 ### Executando o script
 Abra um terminal no diretório do script.
 Execute o script:
