@@ -42,7 +42,7 @@ node app.js
 - O script enviará automaticamente alertas do Discord quando certas condições forem atendidas.
 
 > [!WARNING]
-> Mantenha a tela do dispositivo ligada e não coloque o dispositivo em modo de suspenção para evitar erros.
+> Mantenha a tela do dispositivo ligada e não coloque o dispositivo em modo de suspensão para evitar erros.
 
 ## Explicação dos principais pontos:
 
