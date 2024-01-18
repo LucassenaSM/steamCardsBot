@@ -41,9 +41,7 @@ console.log(
 server.listen(4000, () => console.log("Servidor rodando na porta 4000"));
 
 async function run() {
-  let loop = true;
-
-  while (loop) {
+  while (true) {
     try {
       const browser = await puppeteer.launch({ headless: "new" });
       const page = await browser.newPage();
@@ -188,7 +186,7 @@ async function run() {
           fs.utimesSync("app.js", new Date(), new Date());
           console.log("Script reiniciado para evitar erros");
         } catch (e) {
-          console.log(e.message);
+          console.error(e);
         }
       });
       await new Promise((r) => setTimeout(r, 120000));
