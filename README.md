@@ -30,7 +30,7 @@ USER=usuário_do_Discord_para_enviar_alertas
 Abra um terminal no diretório do script.
 Execute o script:
 ```node app.js```
-Ou crie um atalho do arquivo SteamCardsBot.bat para a área de trabalho e mude o caminho para onde estão os arquivos.
+Ou crie um atalho do arquivo `SteamCardsBot.bat` para a área de trabalho e mude o caminho dentro do arquivo para onde estão os arquivos.
 
 ## Uso
 O script começará a ser executado e monitorando as cartas especificadas.
@@ -42,7 +42,7 @@ O script enviará automaticamente alertas do Discord quando certas condições f
 
 ## Explicação dos principais pontos:
 
-- O script usa a biblioteca Puppeteer para controlar o Chrome sem cabeça. Isso significa que o Chrome será executado em segundo plano sem exibir uma janela.
+- O script usa a biblioteca Puppeteer para controlar o Chromium. Isso significa que o Chromium será executado em segundo plano sem exibir uma janela.
 - O script usa a biblioteca Express para criar uma interface web simples. Esta interface web permite que você visualize o status das cartas em tempo real.
 - O script usa a biblioteca cron para reiniciar automaticamente a cada 2 horas. Isso ajuda a evitar problemas causados por erros ou falhas do sistema.
 - O script usa VBScript para abrir links externos. Isso permite que o script envie alertas do Discord com links para as cartas monitoradas.
