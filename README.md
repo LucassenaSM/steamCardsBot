@@ -56,8 +56,8 @@ node app.js
 
 Você pode personalizar o script modificando o array cards. Esse array contém as informações sobre as cartas que você deseja monitorar. Cada item do array tem os seguintes campos:
 
-site: O URL do site da carta.
-name: O nome da carta.
+- site: O URL do site da carta.
+- name: O nome da carta.
 Por exemplo, para monitorar as cartas "Jew" e "Louie", você pode modificar o array cards da seguinte forma:
 
 ```
