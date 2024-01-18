@@ -31,7 +31,11 @@ Abra um terminal no diretório do script.
 Execute o script:
 ```node app.js```
 ou crie um atalho do arquivo `SteamCardsBot.bat` para a área de trabalho e mude o caminho dentro do arquivo para onde estão os arquivos e caso esteja escrito `nodemon app.js` coloque `node app.js`.
-
+```
+@echo off
+cd C:/coloque/aqui/o/caminho
+node app.js
+```
 ## Uso
 - O script começará a ser executado e monitorando as cartas especificadas.
 - Você pode acessar a interface web para visualizar o status das cartas abrindo http://localhost:4000 em um navegador da web.
