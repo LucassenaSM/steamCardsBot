@@ -1,21 +1,18 @@
-var cards = [];
 var msg = "";
-
-const cardTres = {
-  site: "https://www.steamcardexchange.net/index.php?inventorygame-appid-461950",
-  name: "Jew",
-};
-cards.push(cardTres);
-const cardQuatro = {
-  site: "https://www.steamcardexchange.net/index.php?inventorygame-appid-461950",
-  name: "Louie",
-};
-cards.push(cardQuatro);
-const cardCinco = {
-  site: "https://www.steamcardexchange.net/index.php?inventorygame-appid-461950",
-  name: "Gang",
-};
-cards.push(cardCinco);
+const cards = [
+  {
+    site: "https://www.steamcardexchange.net/index.php?inventorygame-appid-461950",
+    name: "Jew",
+  },
+  {
+    site: "https://www.steamcardexchange.net/index.php?inventorygame-appid-461950",
+    name: "Louie",
+  },
+  {
+    site: "https://www.steamcardexchange.net/index.php?inventorygame-appid-461950",
+    name: "Gang",
+  },
+];
 
 const fs = require("fs");
 const { exec } = require("child_process");
@@ -39,6 +36,31 @@ console.log(
  ########   ########## ###   ##### ###     ### `
 );
 server.listen(4000, () => console.log("Servidor rodando na porta 4000"));
+
+async function loginAndPost(page, card) {
+  await page.goto(`https://discord.com/login`);
+  await page.waitForSelector('input[name="email"]');
+  await page.focus('input[name="email"]');
+  await page.keyboard.type(`${process.env.EMAIL}`);
+  await page.focus('input[name="password"]');
+  await page.keyboard.type(`${process.env.SENHA}`);
+  await page.waitForSelector('button[type="submit"]');
+  await page.click('button[type="submit"]');
+  await new Promise((r) => setTimeout(r, 3000));
+  await page.keyboard.down("Control");
+  await page.keyboard.press("KeyK");
+  await page.keyboard.up("Control");
+  await page.focus('input[aria-label="Troca rápida"]');
+  await page.keyboard.type(`${process.env.USER}`);
+  await new Promise((r) => setTimeout(r, 3000));
+  await page.keyboard.press("Enter");
+  await page.waitForSelector('div[role="textbox"]');
+  await page.click('div[role="textbox"]');
+  await page.keyboard.type(
+    `:warning: Carta ${card.name} disponivel para troca :flower_playing_cards:`
+  );
+  await page.keyboard.press("Enter");
+}
 
 async function run() {
   while (true) {
@@ -113,29 +135,7 @@ async function run() {
               return;
             }
           });
-
-          await page.goto(`https://discord.com/login`);
-          await page.waitForSelector('input[name="email"]');
-          await page.focus('input[name="email"]');
-          await page.keyboard.type(`${process.env.EMAIL}`);
-          await page.focus('input[name="password"]');
-          await page.keyboard.type(`${process.env.SENHA}`);
-          await page.waitForSelector('button[type="submit"]');
-          await page.click('button[type="submit"]');
-          await new Promise((r) => setTimeout(r, 3000));
-          await page.keyboard.down("Control");
-          await page.keyboard.press("KeyK");
-          await page.keyboard.up("Control");
-          await page.focus('input[aria-label="Troca rápida"]');
-          await page.keyboard.type(`${process.env.USER}`);
-          await new Promise((r) => setTimeout(r, 3000));
-          await page.keyboard.press("Enter");
-          await page.waitForSelector('div[role="textbox"]');
-          await page.click('div[role="textbox"]');
-          await page.keyboard.type(
-            `:warning: Carta ${cards[i].name} disponivel para troca :flower_playing_cards:`
-          );
-          await page.keyboard.press("Enter");
+          loginAndPost(page, cards[i]);
           cards.splice(i, 1);
 
           const vbsCode = `Set WshShell = WScript.CreateObject("WScript.Shell")\nWshShell.Run "${cards[i].site}"`;
