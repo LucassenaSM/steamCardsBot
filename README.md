@@ -42,10 +42,10 @@ O script enviará automaticamente alertas do Discord quando certas condições f
 
 ## Explicação dos principais pontos:
 
-O script usa a biblioteca Puppeteer para controlar o Chrome sem cabeça. Isso significa que o Chrome será executado em segundo plano sem exibir uma janela.
-O script usa a biblioteca Express para criar uma interface web simples. Esta interface web permite que você visualize o status das cartas em tempo real.
-O script usa a biblioteca cron para reiniciar automaticamente a cada 2 horas. Isso ajuda a evitar problemas causados por erros ou falhas do sistema.
-O script usa VBScript para abrir links externos. Isso permite que o script envie alertas do Discord com links para as cartas monitoradas.
+- O script usa a biblioteca Puppeteer para controlar o Chrome sem cabeça. Isso significa que o Chrome será executado em segundo plano sem exibir uma janela.
+- O script usa a biblioteca Express para criar uma interface web simples. Esta interface web permite que você visualize o status das cartas em tempo real.
+- O script usa a biblioteca cron para reiniciar automaticamente a cada 2 horas. Isso ajuda a evitar problemas causados por erros ou falhas do sistema.
+- O script usa VBScript para abrir links externos. Isso permite que o script envie alertas do Discord com links para as cartas monitoradas.
 
 
 ## Como personalizar o script:
@@ -88,11 +88,11 @@ Além disso, você pode remover completamente a função `loginAndPost`.
 O site onde a carta está localizada é aberto automaticamente.
 
 ## Notas adicionais
-Personalização: Você pode modificar o array cards para monitorar diferentes cartas.
-Gerenciamento de erros: O script inclui um gerenciamento básico de erros e tentará reiniciar se ocorrerem erros.
-Agendamento: O script usa cron para reiniciar automaticamente a cada 2 horas para evitar possíveis problemas.
-VBScript: O script usa VBScript para abrir links externos. Se você encontrar problemas, certifique-se de que o VBScript esteja ativado no seu sistema.
-Espero que este README seja útil! Sinta-se à vontade para entrar em contato se tiver mais alguma dúvida.
+- Personalização: Você pode modificar o array cards para monitorar diferentes cartas.
+- Gerenciamento de erros: O script inclui um gerenciamento básico de erros e tentará reiniciar se ocorrerem erros.
+- Agendamento: O script usa cron para reiniciar automaticamente a cada 2 horas para evitar possíveis problemas.
+- VBScript: O script usa VBScript para abrir links externos. Se você encontrar problemas, certifique-se de que o VBScript esteja ativado no seu sistema.
+- Espero que este README seja útil! Sinta-se à vontade para entrar em contato se tiver mais alguma dúvida.
 
 ## Como enviar feedback:
 
