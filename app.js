@@ -90,7 +90,8 @@ async function processTime() {
 }
 
 async function run() {
-  while (true) {
+  var active = true;
+  while (active) {
     try {
       const browser = await puppeteer.launch({ headless: "new" });
       const page = await browser.newPage();
@@ -102,7 +103,7 @@ async function run() {
         for (let element of nameElements) {
           let name = await page.evaluate((el) => el.textContent, element);
           if (name === `${cards[i].name}`) {
-            let paddedName = cards[i].name.padEnd(10, ' ');
+            let paddedName = cards[i].name.padEnd(10, " ");
             // Obtenha o elemento pai
             let parentElement = (await element.$x(".."))[0];
 
@@ -148,16 +149,23 @@ async function run() {
                   );
                   break;
               }
-              msg += `<pre style="font-family:verdana; color:${color}; padding: 1em; border: 1px solid #ffffff; border-radius: 10px; height: 1em">${paddedName}\t<span style="font-weight: 900;">|\t</span>${number} carta(s)</pre>`;
+              msg += `<pre style="font-family:verdana; color:${color}; padding: 1em; border: 1px solid #ffffff; border-radius: 10px; height: 1em; margin:0px;">${paddedName}\t<span style="font-weight: 900;">|\t</span>${number} carta(s)</pre>`;
               app.get("/", async (req, res) => {
                 let time = await processTime();
                 let pTime = `<p style="font-family:verdana; color: #FFFFFF; padding: 1em;">${time}</p>`;
-                res.send(`<body style="background-color: #1f2124; padding:0px; margin:0px; width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;"><div style="width: 100vw; height: 100vh; display: flex; flex-direction: row; gap: 1em; justify-content: center; align-items: center; flex-wrap: nowrap;">${msg}</div>${pTime}</body>`);
+                if (active) {
+                  res.send(
+                    `<body style="background-color: #1f2124; font-family: sans-serif; padding:0px; margin:0px; width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;"><div style="display:flex; flex-direction: row; justify-content:space-between; width:100vw;align-items: baseline;"><h1 style="color: #FFFFFF; margin-left:1em;">Steam Cards Bot</h1><span style="color: #FFFFFF;">Ativação:<button onclick="window.location.href='/ativar'" style="background-color: #4CAF50; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px;">Ativar</button><button onclick="window.location.href='/desativar'" style="background-color: #f44336; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px;">Desativar</button></span><h2><a href="https://github.com/LucassenaSM" style="color:#FFFFFF; text-decoration:none; margin-right:1em;";>By: Lucas Sena</a></h2></div><div style="width: 100vw; height: 100vh; display: flex; flex-direction: row; gap: 10px 1em; justify-content: center; align-items: center; flex-wrap: wrap; align-content: center;">${msg}</div>${pTime}</body>`
+                  );
+                } else {
+                  res.send(
+                    `<body style="background-color: #1f2124; font-family: sans-serif; padding:0px; margin:0px; width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;"><div style="display:flex; flex-direction: row; justify-content:space-between; width:100vw;align-items: baseline;"><h1 style="color: #FFFFFF; margin-left:1em;">Steam Cards Bot</h1><span style="color: #FFFFFF;">Ativação:<button onclick="window.location.href='/ativar'" style="background-color: #4CAF50; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px;">Ativar</button><button onclick="window.location.href='/desativar'" style="background-color: #f44336; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px;">Desativar</button></span><h2><a href="https://github.com/LucassenaSM" style="color:#FFFFFF; text-decoration:none; margin-right:1em;";>By: Lucas Sena</a></h2></div><div style="width: 100vw; height: 100vh; display: flex; flex-direction: row; gap: 10px 1em; justify-content: center; align-items: center; flex-wrap: wrap; align-content: center;"><h1>Script Desativado</h1></div>${pTime}</body>`
+                  );
+                }
               });
             }
           }
         }
-
         if (number > 1) {
           exec("alert.vbs", (error, stdout, stderr) => {
             if (error) {
@@ -196,6 +204,21 @@ async function run() {
       console.log("\x1b[37m", `----------------------------------`);
       console.log(await processTime());
       await browser.close();
+      app.get("/ativar", (req, res) => {
+        active = true;
+        console.log(active);
+        res.send(
+          `<script>window.location.href = '/';</script>Ativado com sucesso`
+        );
+      });
+
+      app.get("/desativar", (req, res) => {
+        active = false;
+        console.log(active);
+        res.send(
+          `<script>window.location.href = '/';</script>Desativado com sucesso`
+        );
+      });
       cron.schedule("1 */2 * * *", function () {
         try {
           fs.utimesSync("app.js", new Date(), new Date());
