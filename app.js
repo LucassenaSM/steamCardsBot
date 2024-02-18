@@ -12,6 +12,18 @@ const cards = [
     site: "https://www.steamcardexchange.net/index.php?inventorygame-appid-461950",
     name: "Gang",
   },
+  {
+    site: "https://www.steamcardexchange.net/index.php?inventorygame-appid-368230",
+    name: "Farmer",
+  },
+  {
+    site: "https://www.steamcardexchange.net/index.php?inventorygame-appid-368230",
+    name: "Greed",
+  },
+  {
+    site: "https://www.steamcardexchange.net/index.php?inventorygame-appid-368230",
+    name: "Worker",
+  },
 ];
 
 const fs = require("fs");
@@ -36,6 +48,7 @@ console.log(
  ########   ########## ###   ##### ###     ### `
 );
 server.listen(4000, () => console.log("Servidor rodando na porta 4000"));
+console.table(cards);
 
 async function loginAndPost(page, card) {
   await page.goto(`https://discord.com/login`);
@@ -62,6 +75,20 @@ async function loginAndPost(page, card) {
   await page.keyboard.press("Enter");
 }
 
+async function processTime() {
+  if (process.uptime() < 60) {
+    return `Tempo de execução: ${process.uptime().toFixed()} segundos`;
+  } else if (process.uptime() >= 60 && process.uptime() < 3600) {
+    let minutos = Math.floor(process.uptime() / 60);
+    let segundos = process.uptime() % 60;
+    return `Tempo de execução: ${minutos.toFixed()} minuto(s) e ${segundos.toFixed()} segundo(s)`;
+  } else {
+    let horas = Math.floor(process.uptime() / 3600);
+    let minutos = Math.floor((process.uptime() % 3600) / 60);
+    return `Tempo de execução: ${horas.toFixed()} hora(s) e ${minutos.toFixed()} minuto(s)`;
+  }
+}
+
 async function run() {
   while (true) {
     try {
@@ -75,6 +102,7 @@ async function run() {
         for (let element of nameElements) {
           let name = await page.evaluate((el) => el.textContent, element);
           if (name === `${cards[i].name}`) {
+            let paddedName = cards[i].name.padEnd(10, ' ');
             // Obtenha o elemento pai
             let parentElement = (await element.$x(".."))[0];
 
@@ -82,6 +110,7 @@ async function run() {
             let grey = await parentElement.$(".text-key-grayscale");
             let green = await parentElement.$(".text-key-green");
             let yellow = await parentElement.$(".text-key-yellow");
+            console.log("\x1b[37m", `----------------------------------`);
             let colorElement = red || grey || green || yellow;
             if (colorElement) {
               var value = await page.evaluate(
@@ -97,32 +126,33 @@ async function run() {
                 case "rgb(181, 36, 38)":
                   console.log(
                     "\x1b[31m",
-                    `${cards[i].name} possuí ${number} carta(s)`
+                    `|${paddedName}\t|\t${number} carta(s)|`
                   );
                   break;
                 case "rgb(255, 255, 255)":
                   console.log(
                     "\x1b[2m\x1b[37m%s\x1b[0m",
-                    `${cards[i].name} possuí ${number} carta(s)`
+                    ` |${paddedName}\t|\t${number} carta(s)|`
                   );
                   break;
                 case "rgb(248, 210, 16)":
                   console.log(
                     "\x1b[33m%s\x1b[0m",
-                    `${cards[i].name} possuí ${number} carta(s)`
+                    `|${paddedName}\t|\t${number} carta(s)|`
                   );
                   break;
                 default:
                   console.log(
                     "\x1b[32m",
-                    `${cards[i].name} possuí ${number} carta(s)`
+                    `|${paddedName}\t|\t${number} carta(s)|`
                   );
                   break;
               }
-              console.log("\x1b[37m", `--------------------------------`);
-              msg += `<p style="font-family:verdana; color:${color}; background-color: black; padding: 1em;">${cards[i].name} possuí ${number} carta(s)</p>`;
-              app.get("/", (req, res) => {
-                res.send(msg);
+              msg += `<pre style="font-family:verdana; color:${color}; padding: 1em; border: 1px solid #ffffff; border-radius: 10px; height: 1em">${paddedName}\t<span style="font-weight: 900;">|\t</span>${number} carta(s)</pre>`;
+              app.get("/", async (req, res) => {
+                let time = await processTime();
+                let pTime = `<p style="font-family:verdana; color: #FFFFFF; padding: 1em;">${time}</p>`;
+                res.send(`<body style="background-color: #1f2124; padding:0px; margin:0px; width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;"><div style="width: 100vw; height: 100vh; display: flex; flex-direction: row; gap: 1em; justify-content: center; align-items: center; flex-wrap: nowrap;">${msg}</div>${pTime}</body>`);
               });
             }
           }
@@ -163,23 +193,8 @@ async function run() {
           });
         }
       }
-      if (process.uptime() < 60) {
-        console.log(
-          `Tempo de execução: ${process.uptime().toFixed()} segundos`
-        );
-      } else if (process.uptime() >= 60 && process.uptime() < 3600) {
-        let minutos = Math.floor(process.uptime() / 60);
-        let segundos = process.uptime() % 60;
-        console.log(
-          `Tempo de execução: ${minutos.toFixed()} minutos e ${segundos.toFixed()} segundos`
-        );
-      } else {
-        let horas = Math.floor(process.uptime() / 3600);
-        let minutos = Math.floor((process.uptime() % 3600) / 60);
-        console.log(
-          `Tempo de execução: ${horas.toFixed()} horas e ${minutos.toFixed()} minutos`
-        );
-      }
+      console.log("\x1b[37m", `----------------------------------`);
+      console.log(await processTime());
       await browser.close();
       cron.schedule("1 */2 * * *", function () {
         try {
@@ -193,7 +208,7 @@ async function run() {
       msg = "";
     } catch (error) {
       console.error(error);
-      await new Promise((r) => setTimeout(r, 120000));
+      await new Promise((r) => setTimeout(r, 60000));
       fs.utimesSync("app.js", new Date(), new Date());
       console.log("Script reiniciado após erros");
       break;
