@@ -96,74 +96,76 @@ async function run() {
     try {
       const browser = await puppeteer.launch({ headless: "new" });
       const page = await browser.newPage();
-      console.log(`Cartas Sendo analisadas:`);
-      for (let i = 0; i < cards.length; i++) {
-        await page.goto(`${cards[i].site}`);
-        // Encontre o elemento da contagem na página
-        let nameElements = await page.$$(".text-sm.break-words");
-        for (let element of nameElements) {
-          let name = await page.evaluate((el) => el.textContent, element);
-          if (name === `${cards[i].name}`) {
-            let paddedName = cards[i].name.padEnd(10, " ");
-            // Obtenha o elemento pai
-            let parentElement = (await element.$x(".."))[0];
+      if (active == true) {
+        console.log(`Cartas Sendo analisadas:`);
+        for (let i = 0; i < cards.length; i++) {
+          await page.goto(`${cards[i].site}`);
+          // Encontre o elemento da contagem na página
+          let nameElements = await page.$$(".text-sm.break-words");
+          for (let element of nameElements) {
+            let name = await page.evaluate((el) => el.textContent, element);
+            if (name === `${cards[i].name}`) {
+              let paddedName = cards[i].name.padEnd(10, " ");
+              // Obtenha o elemento pai
+              let parentElement = (await element.$x(".."))[0];
 
-            let red = await parentElement.$(".text-key-red");
-            let grey = await parentElement.$(".text-key-grayscale");
-            let green = await parentElement.$(".text-key-green");
-            let yellow = await parentElement.$(".text-key-yellow");
-            console.log("\x1b[37m", `----------------------------------`);
-            let colorElement = red || grey || green || yellow;
-            if (colorElement) {
-              var value = await page.evaluate(
-                (el) => el.textContent,
-                colorElement
-              );
-              var color = await page.evaluate(
-                (el) => getComputedStyle(el).color,
-                colorElement
-              );
-              var number = parseInt(value.split(" ")[1]);
-              switch (color) {
-                case "rgb(181, 36, 38)":
-                  console.log(
-                    "\x1b[31m",
-                    `|${paddedName}\t|\t${number} carta(s)|`
-                  );
-                  break;
-                case "rgb(255, 255, 255)":
-                  console.log(
-                    "\x1b[2m\x1b[37m%s\x1b[0m",
-                    ` |${paddedName}\t|\t${number} carta(s)|`
-                  );
-                  break;
-                case "rgb(248, 210, 16)":
-                  console.log(
-                    "\x1b[33m%s\x1b[0m",
-                    `|${paddedName}\t|\t${number} carta(s)|`
-                  );
-                  break;
-                default:
-                  console.log(
-                    "\x1b[32m",
-                    `|${paddedName}\t|\t${number} carta(s)|`
-                  );
-                  break;
-              }
-              msg += `<pre style="font-family:verdana; color:${color}; padding: 1em; border: 1px solid #ffffff; border-radius: 10px; height: 1em; margin:0px;">${paddedName}\t<span style="font-weight: 900;">|\t</span>${number} carta(s)</pre>`;
-              app.get("/", async (req, res) => {
-                let time = await processTime();
-                pTime = `<p style="font-family:verdana; color: #FFFFFF; padding: 1em;">${time}</p>`;
-                if (active) {
-                  res.send(
-                    `<body style="background-color: #1f2124; font-family: sans-serif; padding:0px; margin:0px; width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;"><div style="display:flex; flex-direction: row; justify-content:space-between; width:100vw;align-items: baseline;"><h1 style="color: #FFFFFF; margin-left:1em;">Steam Cards Bot</h1><span style="color: #FFFFFF;">Ativação:<button onclick="window.location.href='/ativar'" style="background-color: #4CAF50; margin: 10px; border: none; border-radius:10px; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px;">Ativar</button><button onclick="window.location.href='/desativar'" style="background-color: #f44336; border: none; border-radius:10px; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px;">Desativar</button></span><h2><a href="https://github.com/LucassenaSM" style="color:#FFFFFF; text-decoration:none; margin-right:1em;";>By: Lucas Sena</a></h2></div><div style="width: 100vw; height: 100vh; display: flex; flex-direction: row; gap: 10px 1em; justify-content: center; align-items: center; flex-wrap: wrap; align-content: center;">${msg}</div>${pTime}</body>`
-                  );
-                } else {
-                  res.send(
-                    `<body style="background-color: #1f2124; color: #FFFFFF; font-family: sans-serif; padding:0px; margin:0px; width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;"><div style="display:flex; flex-direction: row; justify-content:space-between; width:100vw;align-items: baseline;"><h1 style="color: #FFFFFF; margin-left:1em;">Steam Cards Bot</h1><span style="color: #FFFFFF;">Ativação:<button onclick="window.location.href='/ativar'" style="background-color: #4CAF50; margin: 10px; border: none; border-radius:10px; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px;">Ativar</button><button onclick="window.location.href='/desativar'" style="background-color: #f44336; border: none; border-radius:10px; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px;">Desativar</button></span><h2><a href="https://github.com/LucassenaSM" style="color:#FFFFFF; text-decoration:none; margin-right:1em;";>By: Lucas Sena</a></h2></div><div style="width: 100vw; height: 100vh; display: flex; flex-direction: row; gap: 10px 1em; justify-content: center; align-items: center; flex-wrap: wrap; align-content: center;"><h1>Script Desativado</h1></div>${pTime}</body>`
-                  );
+              let red = await parentElement.$(".text-key-red");
+              let grey = await parentElement.$(".text-key-grayscale");
+              let green = await parentElement.$(".text-key-green");
+              let yellow = await parentElement.$(".text-key-yellow");
+              console.log("\x1b[37m", `----------------------------------`);
+              let colorElement = red || grey || green || yellow;
+              if (colorElement) {
+                var value = await page.evaluate(
+                  (el) => el.textContent,
+                  colorElement
+                );
+                var color = await page.evaluate(
+                  (el) => getComputedStyle(el).color,
+                  colorElement
+                );
+                var number = parseInt(value.split(" ")[1]);
+                switch (color) {
+                  case "rgb(181, 36, 38)":
+                    console.log(
+                      "\x1b[31m",
+                      `|${paddedName}\t|\t${number} carta(s)|`
+                    );
+                    break;
+                  case "rgb(255, 255, 255)":
+                    console.log(
+                      "\x1b[2m\x1b[37m%s\x1b[0m",
+                      ` |${paddedName}\t|\t${number} carta(s)|`
+                    );
+                    break;
+                  case "rgb(248, 210, 16)":
+                    console.log(
+                      "\x1b[33m%s\x1b[0m",
+                      `|${paddedName}\t|\t${number} carta(s)|`
+                    );
+                    break;
+                  default:
+                    console.log(
+                      "\x1b[32m",
+                      `|${paddedName}\t|\t${number} carta(s)|`
+                    );
+                    break;
                 }
-              });
+                msg += `<pre style="font-family:verdana; color:${color}; padding: 1em; border: 1px solid #ffffff; border-radius: 10px; height: 1em; margin:0px;">${paddedName}\t<span style="font-weight: 900;">|\t</span>${number} carta(s)</pre>`;
+                app.get("/", async (req, res) => {
+                  let time = await processTime();
+                  pTime = `<p style="font-family:verdana; color: #FFFFFF; padding: 1em;">${time}</p>`;
+                  if (active) {
+                    res.send(
+                      `<body style="background-color: #1f2124; font-family: sans-serif; padding:0px; margin:0px; width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;"><div style="display:flex; flex-direction: row; justify-content:space-between; width:100vw;align-items: baseline;"><h1 style="color: #FFFFFF; margin-left:1em;">Steam Cards Bot</h1><span style="color: #FFFFFF;">Ativação:<button onclick="window.location.href='/ativar'" style="background-color: #4CAF50; margin: 10px; border: none; border-radius:10px; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px;">Ativar</button><button onclick="window.location.href='/desativar'" style="background-color: #f44336; border: none; border-radius:10px; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px;">Desativar</button></span><h2><a href="https://github.com/LucassenaSM" style="color:#FFFFFF; text-decoration:none; margin-right:1em;";>By: Lucas Sena</a></h2></div><div style="width: 100vw; height: 100vh; display: flex; flex-direction: row; gap: 10px 1em; justify-content: center; align-items: center; flex-wrap: wrap; align-content: center;">${msg}</div>${pTime}</body>`
+                    );
+                  } else {
+                    res.send(
+                      `<body style="background-color: #1f2124; color: #FFFFFF; font-family: sans-serif; padding:0px; margin:0px; width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;"><div style="display:flex; flex-direction: row; justify-content:space-between; width:100vw;align-items: baseline;"><h1 style="color: #FFFFFF; margin-left:1em;">Steam Cards Bot</h1><span style="color: #FFFFFF;">Ativação:<button onclick="window.location.href='/ativar'" style="background-color: #4CAF50; margin: 10px; border: none; border-radius:10px; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px;">Ativar</button><button onclick="window.location.href='/desativar'" style="background-color: #f44336; border: none; border-radius:10px; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px;">Desativar</button></span><h2><a href="https://github.com/LucassenaSM" style="color:#FFFFFF; text-decoration:none; margin-right:1em;";>By: Lucas Sena</a></h2></div><div style="width: 100vw; height: 100vh; display: flex; flex-direction: row; gap: 10px 1em; justify-content: center; align-items: center; flex-wrap: wrap; align-content: center;"><h1>Script Desativado</h1></div>${pTime}</body>`
+                    );
+                  }
+                });
+              }
             }
           }
         }
